@@ -1,5 +1,6 @@
 package com.hcl.employee.rest.api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class ImplEmployeeService implements EmployeeService {
 	@Override
 	public Employee updateEmployee(long empId, double salary) {
 		
-		Optional<Employee> optionalEmp =	employeeRepository.findById(empId);
+		Optional<Employee> optionalEmp = employeeRepository.findById(empId);
 		if(optionalEmp.isPresent())
 		{
 			Employee employee =  optionalEmp.get();
@@ -49,6 +50,13 @@ public class ImplEmployeeService implements EmployeeService {
 		{
 			throw new EmployeeDoesNotExistException("Employee with id "+empId+" does not exist");
 		}
+	}
+
+	@Override
+	public List<Employee> getAllEmployees() {
+		
+		   
+		return employeeRepository.findAll();
 	}
 
 }

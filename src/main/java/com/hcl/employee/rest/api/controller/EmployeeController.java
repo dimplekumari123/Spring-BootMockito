@@ -1,5 +1,7 @@
 package com.hcl.employee.rest.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,5 +39,9 @@ public class EmployeeController {
 	{
 		return implEmployeeService.updateEmployee(empId, salary);
 	}
-
+	@GetMapping("/employee/allEmployee")
+	public List<Employee> getAllEmployee(){
+		
+		return implEmployeeService.getAllEmployees();
+	}
 }
