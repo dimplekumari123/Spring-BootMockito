@@ -3,6 +3,8 @@ package com.hcl.employee.rest.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,25 +25,29 @@ public class EmployeeController {
 	ImplEmployeeService implEmployeeService;
 	
 	@PostMapping("/employee/add")
-	public Employee addEmployee(@RequestBody Employee employee)
+	public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee)
 	{
-		return implEmployeeService.addEmployee(employee);
+		Employee employee2 = implEmployeeService.addEmployee(employee);
+		return new ResponseEntity<Employee>(employee2, HttpStatus.OK);
 	}
 	
 	@GetMapping("/employee/getEmployee/{empId}")
-	public Employee getEmployeeById(@PathVariable int empId)
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable int empId)
 	{
-		return implEmployeeService.getEmployeeById(empId);
+		Employee employee = implEmployeeService.getEmployeeById(empId);
+		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
 	}
 	
 	@PutMapping("/employee/updateEmployee/")
-	public Employee updateEmployee(@RequestParam("empId") long empId,@RequestParam("salary") double salary)
+	public ResponseEntity<Employee> updateEmployee(@RequestParam("empId") long empId,@RequestParam("salary") double salary)
 	{
-		return implEmployeeService.updateEmployee(empId, salary);
+		Employee employee  =implEmployeeService.updateEmployee(empId, salary);
+		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
 	}
 	@GetMapping("/employee/allEmployee")
-	public List<Employee> getAllEmployee(){
+	public ResponseEntity<List<Employee>> getAllEmployee(){
 		
-		return implEmployeeService.getAllEmployees();
+		List<Employee> list_emp = implEmployeeService.getAllEmployees();
+		return new ResponseEntity<List<Employee>>(list_emp, HttpStatus.OK);
 	}
 }
