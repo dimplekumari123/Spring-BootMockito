@@ -1,7 +1,12 @@
 package com.hcl.employee.rest.api.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,10 +61,53 @@ public class EmployeeControllerTest {
 		
 		//call service from controller
 		ResponseEntity<Employee> employee = employeeController.addEmployee(emp);
-		
+		//test data
 		assertEquals(1000, employee.getBody().getEmpId());
 	}
 	
+	@Test
+	public void getEmployeeByIdTest() throws Exception {
+		//mock data in service implementation
+		Mockito.when(implEmployeeService.getEmployeeById(Mockito.anyLong())).thenReturn(emp);
+		//invoke end point from controller
+		this.mockMvc.perform(
+				get("/rest/employee/getEmployee/{empId}",Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON).content(asJsonString(emp.getEmpId()))).andReturn();
+		
+		//call service from controller
+		ResponseEntity<Employee> employee = employeeController.getEmployeeById(emp.getEmpId());
+		
+		assertEquals("Raja", employee.getBody().getEmpName());
+	}
+	
+	@Test
+	public void updateEmployeeTest() throws Exception {
+		//mock data in service implementation
+		Mockito.when(implEmployeeService.updateEmployee(Mockito.anyLong(), Mockito.anyDouble())).thenReturn(emp);
+		//invoke end point from controller
+		this.mockMvc.perform(
+				put("/rest/employee/updateEmployee").contentType(MediaType.APPLICATION_JSON).content(asJsonString(emp.getEmpId()))).andReturn();
+		
+		//call service from controller
+		ResponseEntity<Employee> employee = employeeController.updateEmployee(1000, 677565);
+		
+		assertEquals("Raja", employee.getBody().getEmpName());
+	}
+	
+	@Test
+	public void getAllEmployeeTest() throws Exception {
+		//mock data in service implementation
+		List<Employee> list_emp = new ArrayList<>();
+		list_emp.add(emp);
+		Mockito.when(implEmployeeService.getAllEmployees()).thenReturn(list_emp);
+		//invoke end point from controller
+		this.mockMvc.perform(
+				get("/rest/employee/allEmployee").contentType(MediaType.APPLICATION_JSON).content(asJsonString(emp))).andReturn();
+		
+		//call service from controller
+		ResponseEntity<List<Employee>> employee = employeeController.getAllEmployee();
+		
+		assertEquals(1, employee.getBody().size());
+	}
 	public static String asJsonString(final Object obj) {
 		try {
 			return new ObjectMapper().writeValueAsString(obj);
